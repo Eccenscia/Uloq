@@ -38,206 +38,84 @@ To use the **Uloq.SDK** in your project, follow these steps:
 The following example demonstrates how to generate a signing QR code using the **Uloq.SDK**:
 
 ```csharp
-using Uloq.SDK.Eccenscia.Services.Models.UloqRequestor;
-using Uloq.SDK.QR;
-
-public class QR
+var connection = Models.ConnectionModel.CreateConnection("test", "test", true);
+QRGenerator qrGenerator = new QRGenerator(connection);
+QRCodeRequest qrCodeRequest = new QRCodeRequest()
 {
-    [Fact(DisplayName = "Generate Signing QR Code")]
-    public async void GenerateSigningQR()
-    {
-        // Create a connection model
-        var connection = Models.ConnectionModel.CreateConnection("test", "test", true);
+    Category = "Test",
+    ActionTitle = "Sign Test",
+    ActionMessage = "Test Message",
+    Metadata = "Test Metadata",
+    PublicKey = "",
+    RequestType = QRCodeRequest.RequestTypeEnum.Sign
+};
+QRCodeResponse? output = await qrGenerator.GenerateQRCode(qrCodeRequest);
 
-        // Create an instance of QRGenerator
-        QRGenerator qrGenerator = new QRGenerator(connection);
-
-        // Create a QRCodeRequest object
-        var qrCodeRequest = new QRCodeRequest()
-        {
-            Category = "Test",
-            ActionTitle = "Sign Test",
-            ActionMessage = "Test Message",
-            Metadata = "Test Metadata",
-            PublicKey = "",
-            RequestType = QRCodeRequest.RequestTypeEnum.Sign
-        };
-
-        // Generate the QR code
-        QRCodeResponse? output = await qrGenerator.GenerateQRCode(qrCodeRequest);
-
-        // Assert the output
-        Assert.True(output != null, "No output received");
-        if (output != null)
-        {
-            Assert.True(!String.IsNullOrEmpty(output.Image), "Image is not empty");
-            Assert.True(!String.IsNullOrEmpty(output.Url), "URL is not empty");
-            Assert.True(!String.IsNullOrEmpty(output.NotificationIdentifier), "Notification Identifier is not empty");
-        }
-    }
-}
+// Assert the output and perform necessary actions
 ```
 
 ## Generating Key Exchange QR Code<a name="generating-key-exchange-qr-code"></a>
 The following example demonstrates how to generate a key exchange QR code using the **Uloq.SDK**:
 
 ```csharp
-using Uloq.SDK.Eccenscia.Services.Models.UloqRequestor;
-using Uloq.SDK.QR;
-
-public class QR
-{
-    [Fact(DisplayName = "Generate Key Exchange QR Code")]
-    public async void GenerateKeyExchangeQR()
-    {
-        // Create a connection model
-        var connection = Models.ConnectionModel.CreateConnection("test", "test", true);
-
-        // Create an instance of QRGenerator
-
-
+var connection = Models.ConnectionModel.CreateConnection("test", "test", true);
 QRGenerator qrGenerator = new QRGenerator(connection);
+QRCodeRequest qrCodeRequest = new QRCodeRequest()
+{
+    Category = "Test",
+    ActionTitle = "Key Exchange Test",
+    ActionMessage = "Test Message",
+    Metadata = "Test Metadata",
+    PublicKey = "",
+    RequestType = QRCodeRequest.RequestTypeEnum.KeyExchange
+};
+QRCodeResponse? output = await qrGenerator.GenerateQRCode(qrCodeRequest);
 
-        // Create a QRCodeRequest object
-        var qrCodeRequest = new QRCodeRequest()
-        {
-            Category = "Test",
-            ActionTitle = "Key Exchange Test",
-            ActionMessage = "Test Message",
-            Metadata = "Test Metadata",
-            PublicKey = "",
-            RequestType = QRCodeRequest.RequestTypeEnum.KeyExchange
-        };
-
-        // Generate the QR code
-        QRCodeResponse? output = await qrGenerator.GenerateQRCode(qrCodeRequest);
-
-        // Assert the output
-        Assert.True(output != null, "No output received");
-        if (output != null)
-        {
-            Assert.True(!String.IsNullOrEmpty(output.Image), "Image is not empty");
-            Assert.True(!String.IsNullOrEmpty(output.Url), "URL is not empty");
-            Assert.True(!String.IsNullOrEmpty(output.NotificationIdentifier), "Notification Identifier is not empty");
-        }
-    }
-}
+// Assert the output and perform necessary actions
 ```
 
 ## Creating Authorization Request<a name="creating-authorization-request"></a>
 The following example demonstrates how to create an authorization request using the **Uloq.SDK**:
 
 ```csharp
-using Uloq.SDK.Authorizations;
-using Uloq.SDK.Eccenscia.Services.Models.UloqRequestor;
+string keyIdentifier = "<insert your uloq key identifier>";
+string notificationIdentifier = Guid.NewGuid().ToString();
 
-public class Authorization
+AuthorizationRequest request = new AuthorizationRequest
 {
-    private string _keyIdentifier = "<insert your uloq key identifier>";
-    private string _notificationIdentifier = Guid.NewGuid().ToString();
+    ActionMessage = "Test Message",
+    ActionTitle = "Test Title",
+    Category = "Test Category",
+    ExpiryDateUTC = DateTime.UtcNow.ToString(),
+    KeyIdentifier = keyIdentifier,
+    Metadata = "Test Metadata",
+    NotificationIdentifier = notificationIdentifier
+};
 
-    [Fact(DisplayName = "Create Authorization with Model")]
-    public async void CreateAuthorizationRequest()
-    {
-        // Create an AuthorizationRequest object
-        var request = new AuthorizationRequest
-        {
-            ActionMessage = "Test Message",
-            ActionTitle = "Test Title",
-            Category = "Test Category",
-            ExpiryDateUTC = DateTime.UtcNow.ToString(),
-            KeyIdentifier = _keyIdentifier,
-            Metadata = "Test Metadata",
-            NotificationIdentifier = _notificationIdentifier
-        };
+AuthorizationRequestor authorizationRequestor = new
 
-        // Create an instance of AuthorizationRequestor
-        AuthorizationRequestor authorizationRequestor = new AuthorizationRequestor(Models.ConnectionModel.CreateConnection("test", "test", true));
+AuthorizationRequestor(Models.ConnectionModel.CreateConnection("test", "test", true));
+bool authorizationCreated = await authorizationRequestor.CreateAuthorization(request);
 
-        // Create the authorization request
-        Assert.True(await authorizationRequestor.CreateAuthorization(request), "Authorization requested");
-    }
-
-    [Fact(DisplayName = "Create Authorization with fields")]
-    public async void CreateAuthorizationRequestWithFields()
-    {
-        // Create an AuthorizationRequest object
-        var request = new AuthorizationRequest
-        {
-            ActionMessage = "Test Message",
-            ActionTitle = "Test Title",
-            Category = "Test Category",
-            ExpiryDateUTC = DateTime.UtcNow.ToString(),
-            KeyIdentifier = _keyIdentifier,
-            Metadata = "Test Metadata",
-            NotificationIdentifier = _notificationIdentifier
-        };
-
-        // Create an instance of AuthorizationRequestor
-        AuthorizationRequestor authorizationRequestor = new AuthorizationRequestor(Models.ConnectionModel.CreateConnection("test", "test", true));
-
-        // Create the authorization request
-        Assert.True(
-            await authorizationRequestor.CreateAuthorization(
-                request.KeyIdentifier,
-                request.NotificationIdentifier,
-                DateTime.UtcNow.AddMinutes(1),
-                request.Category,
-                request.ActionTitle,
-                request.ActionMessage,
-                request.Metadata),
-            "Authorization requested");
-    }
-}
+// Assert the authorization creation status and perform necessary actions
 ```
 
 ## Getting Authorization Response<a name="getting-authorization-response"></a>
 The following example demonstrates how to get an authorization response using the **Uloq.SDK**:
 
 ```csharp
-using Uloq.SDK.Authorizations;
-using Uloq.SDK.Eccenscia.Services.Models.UloqRequestor;
-
-public class Authorization
-{
-    private string _keyIdentifier = "<insert your uloq key identifier>";
-    private string _notificationIdentifier = Guid.NewGuid().ToString();
-
-    [Fact(DisplayName = "Get an authorization response")]
-    public async void GetRequestResponse()
-    {
-        // Create an instance of AuthorizationRequestor
-       
+string keyIdentifier = "<insert your uloq key identifier>";
+string notificationIdentifier = "<insert notification identifier>";
 
 AuthorizationRequestor authorizationRequestor = new AuthorizationRequestor(Models.ConnectionModel.CreateConnection("test", "test", true));
+NotificationDetailsRequest detailsRequest = new NotificationDetailsRequest(notificationIdentifier);
+NotificationDetailsResponse response = await authorizationRequestor.GetAuthorizationResponse(detailsRequest);
 
-        // Get the authorization response
-        var response = await authorizationRequestor.GetAuthorizationResponse(new NotificationDetailsRequest(_notificationIdentifier));
-
-        // Retry getting the response for up to 30 seconds
-        int counter = 0;
-        while (response == null && counter < 30)
-        {
-            Thread.Sleep(1000);
-            counter++;
-            response = await authorizationRequestor.GetAuthorizationResponse(new NotificationDetailsRequest(_notificationIdentifier));
-        }
-
-        // Assert the response
-        if (response != null)
-        {
-            Assert.True(response.Status == NotificationDetailsResponse.StatusEnum.Approved || response.Status == NotificationDetailsResponse.StatusEnum.Declined, "Status is pending");
-            Assert.True(response.Signature != null, "Signature is not null");
-            Assert.True(response.KeyIdentifier == _keyIdentifier, "Key identifier is correct");
-        }
-    }
-}
+// Retry getting the response if needed and perform necessary actions
 ```
 
 ## Sample Code<a name="sample-code"></a>
-For more sample code and usage examples, please refer to the following test classes in the **Uloq.SDK.Test** namespace:
-- `QR` class for generating QR codes
-- `Authorization` class for handling authorizations
+For more sample code and usage examples, please refer to the provided test classes.
 
 ## Contributing<a name="contributing"></a>
 Contributions to the **Uloq.SDK** are welcome! If you find any issues or have suggestions for improvement, please submit an issue or pull request on the GitHub repository.
