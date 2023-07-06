@@ -19,15 +19,15 @@ This will create a connection object for you which will be used when connecting 
 
 ## QR Code Generation
 ```
-            var connection = Models.ConnectionModel.CreateConnection("test", "test", true);
-            QRGenerator qrGenerator = new QRGenerator(connection);
-            QRCodeResponse? output = await qrGenerator.GenerateQRCode(
-                new QRCodeRequest() { 
-                    Category = "Test", 
-                    ActionTitle = "Sign Test", 
-                    ActionMessage = "Test Message", 
-                    Metadata = "Test Metadata", 
-                    PublicKey = "", 
-                    RequestType = QRCodeRequest.RequestTypeEnum.Sign 
-                });
+var connection = Models.ConnectionModel.CreateConnection("test", "test", true);
+QRGenerator qrGenerator = new QRGenerator(connection);
+QRCodeResponse? output = await qrGenerator.GenerateQRCode(
+	new QRCodeRequest() { 
+		Category = "Test", 
+		ActionTitle = "Sign Test", 
+		ActionMessage = "Test Message", 
+		Metadata = "Test Metadata", 
+		PublicKey = "", 
+		RequestType = QRCodeRequest.RequestTypeEnum.Sign 
+	});
 ```
