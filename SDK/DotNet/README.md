@@ -50,15 +50,19 @@ QRGenerator qrGenerator = new QRGenerator(connection);
 QRCodeRequest qrCodeRequest = new QRCodeRequest()
 {
     RequestType = QRCodeRequest.RequestTypeEnum.Sign,
-    Category = "Test",
+    Category = "Test Category",
     ActionTitle = "Sign Test",
     ActionMessage = "Test Message",
     Metadata = "Test Metadata",
-    PublicKey = ""
+    PublicKey = "ABC123"
 };
 QRCodeResponse? output = await qrGenerator.GenerateQRCode(qrCodeRequest);
 
-// Assert the output and perform necessary actions
+// Example output:
+// output.NotificationIdentifier = "12345"
+// output.Image = "Base64-encoded image data"
+// output.Url = "https://example.com/qr-code"
+
 ```
 
 ## Generating Key Exchange QR Code<a name="generating-key-exchange-qr-code"></a>
@@ -70,23 +74,27 @@ QRGenerator qrGenerator = new QRGenerator(connection);
 QRCodeRequest qrCodeRequest = new QRCodeRequest()
 {
     RequestType = QRCodeRequest.RequestTypeEnum.KeyExchange,
-    Category = "Test",
+    Category = "Test Category",
     ActionTitle = "Key Exchange Test",
     ActionMessage = "Test Message",
     Metadata = "Test Metadata",
-    PublicKey = ""
+    PublicKey = "DEF456"
 };
 QRCodeResponse? output = await qrGenerator.GenerateQRCode(qrCodeRequest);
 
-// Assert the output and perform necessary actions
+// Example output:
+// output.NotificationIdentifier = "67890"
+// output.Image = "Base64-encoded image data"
+// output.Url = "https://example.com/qr-code"
+
 ```
 
 ## Creating Authorization Request<a name="creating-authorization-request"></a>
 The following example demonstrates how to create an authorization request using the **Uloq.SDK**:
 
 ```csharp
-string keyIdentifier = "<insert your uloq key identifier>";
-string notificationIdentifier = Guid.NewGuid().ToString();
+string keyIdentifier = "ULoqKeyIdentifier";
+string notificationIdentifier = "Notification123";
 
 AuthorizationRequest request = new AuthorizationRequest
 {
@@ -102,21 +110,31 @@ AuthorizationRequest request = new AuthorizationRequest
 AuthorizationRequestor authorizationRequestor = new AuthorizationRequestor(Models.ConnectionModel.CreateConnection("test", "test", true));
 bool authorizationCreated = await authorizationRequestor.CreateAuthorization(request);
 
-// Assert the authorization creation status and perform necessary actions
+// Example output:
+// authorizationCreated = true
+
 ```
 
 ## Getting Authorization Response<a name="getting-authorization-response"></a>
 The following example demonstrates how to get an authorization response using the **Uloq.SDK**:
 
 ```csharp
-string keyIdentifier = "<insert your uloq key identifier>";
-string notificationIdentifier = "<insert notification identifier>";
+string keyIdentifier = "ULoqKeyIdentifier";
+string notificationIdentifier = "Notification123";
 
 AuthorizationRequestor authorizationRequestor = new AuthorizationRequestor(Models.ConnectionModel.CreateConnection("test", "test", true));
 NotificationDetailsRequest detailsRequest = new NotificationDetailsRequest(notificationIdentifier);
 NotificationDetailsResponse response = await authorizationRequestor.GetAuthorizationResponse(detailsRequest);
 
-// Retry getting the response if needed and perform necessary actions
+// Example output:
+// response.KeyIdentifier = "ULoqKeyIdentifier"
+// response.NotificationIdentifier = "Notification123"
+// response.Status = NotificationDetailsResponse.StatusEnum.Approved
+// response.Payload = [ { "Payload": "ABC123", "Order": 1 } ]
+// response.Signature = "Base64-encoded signature data"
+// response.PublicKey = "DEF456"
+// response.IdentifierMetadata = "XYZ789"
+
 ```
 
 ## Verifying Signature<a name="verifying-signature"></a>
@@ -132,13 +150,10 @@ public async Task<bool> VerifySignature(byte[] signatureData, byte[] publicKey, 
 
     ECPublicKeyParameters pubKey = (ECPublicKeyParameters)PublicKeyFactory.CreateKey(publicKey);
     signer.Init(false, pubKey);
-    signer.BlockUpdate(signatureData, 0, signatureData
-
-.Length);
+    signer.BlockUpdate(signatureData, 0, signatureData.Length);
 
     return await Task.FromResult(signer.VerifySignature(signature));
 }
-
 ```
 
 To verify the signature using the standard .NET libraries, you can use the following code:
@@ -170,7 +185,9 @@ public async Task<bool> VerifySignature(byte[] signatureData, byte[] publicKey, 
 ## Sample Code<a name="sample-code"></a>
 For more sample code and usage examples, please refer to the provided test classes.
 
-## Contributing<a name="contributing"></a>
+## Contributing<a name="contributing
+
+"></a>
 Contributions to the **Uloq.SDK** are welcome! If you find any issues or have suggestions for improvement, please submit an issue or pull request on the GitHub repository.
 
 ## License<a name="license"></a>
