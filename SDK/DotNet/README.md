@@ -185,9 +185,7 @@ public async Task<bool> VerifySignature(byte[] signatureData, byte[] publicKey, 
 ## Sample Code<a name="sample-code"></a>
 For more sample code and usage examples, please refer to the provided test classes.
 
-## Contributing<a name="contributing
-
-"></a>
+## Contributing<a name="contributing"></a>
 Contributions to the **Uloq.SDK** are welcome! If you find any issues or have suggestions for improvement, please submit an issue or pull request on the GitHub repository.
 
 ## License<a name="license"></a>
