@@ -9,9 +9,10 @@ This document provides an overview and usage examples for integrating the **Uloq
 4. [Generating Key Exchange QR Code](#generating-key-exchange-qr-code)
 5. [Creating Authorization Request](#creating-authorization-request)
 6. [Getting Authorization Response](#getting-authorization-response)
-7. [Sample Code](#sample-code)
-8. [Contributing](#contributing)
-9. [License](#license)
+7. [Verifying Signature](#verifying-signature)
+8. [Sample Code](#sample-code)
+9. [Contributing](#contributing)
+10. [License](#license)
 
 ## Prerequisites<a name="prerequisites"></a>
 - .NET Core SDK (version X.X or higher)
@@ -20,13 +21,19 @@ This document provides an overview and usage examples for integrating the **Uloq
 ## Installation<a name="installation"></a>
 To use the **Uloq.SDK** in your project, follow these steps:
 
-1. Install the **Uloq.SDK** NuGet package by running the following command in the NuGet Package Manager Console:
+1. Open your project in Visual Studio.
 
-   ```bash
-   Install-Package Uloq.SDK
-   ```
+2. Right-click on your project in the Solution Explorer and select "Manage NuGet Packages".
 
-2. Import the necessary namespaces in your code files:
+3. In the NuGet Package Manager, search for "Uloq.SDK".
+
+4. Select the **Uloq.SDK** package from the search results.
+
+5. Click on the "Install" button to install the package into your project.
+
+6. Visual Studio will download and install the **Uloq.SDK** package and its dependencies.
+
+7. Once the installation is complete, you can start using the **Uloq.SDK** in your code.
 
    ```csharp
    using Uloq.SDK.Eccenscia.Services.Models.UloqRequestor;
@@ -42,12 +49,12 @@ var connection = Models.ConnectionModel.CreateConnection("test", "test", true);
 QRGenerator qrGenerator = new QRGenerator(connection);
 QRCodeRequest qrCodeRequest = new QRCodeRequest()
 {
+    RequestType = QRCodeRequest.RequestTypeEnum.Sign,
     Category = "Test",
     ActionTitle = "Sign Test",
     ActionMessage = "Test Message",
     Metadata = "Test Metadata",
-    PublicKey = "",
-    RequestType = QRCodeRequest.RequestTypeEnum.Sign
+    PublicKey = ""
 };
 QRCodeResponse? output = await qrGenerator.GenerateQRCode(qrCodeRequest);
 
@@ -62,12 +69,12 @@ var connection = Models.ConnectionModel.CreateConnection("test", "test", true);
 QRGenerator qrGenerator = new QRGenerator(connection);
 QRCodeRequest qrCodeRequest = new QRCodeRequest()
 {
+    RequestType = QRCodeRequest.RequestTypeEnum.KeyExchange,
     Category = "Test",
     ActionTitle = "Key Exchange Test",
     ActionMessage = "Test Message",
     Metadata = "Test Metadata",
-    PublicKey = "",
-    RequestType = QRCodeRequest.RequestTypeEnum.KeyExchange
+    PublicKey = ""
 };
 QRCodeResponse? output = await qrGenerator.GenerateQRCode(qrCodeRequest);
 
@@ -83,18 +90,16 @@ string notificationIdentifier = Guid.NewGuid().ToString();
 
 AuthorizationRequest request = new AuthorizationRequest
 {
-    ActionMessage = "Test Message",
-    ActionTitle = "Test Title",
-    Category = "Test Category",
-    ExpiryDateUTC = DateTime.UtcNow.ToString(),
     KeyIdentifier = keyIdentifier,
-    Metadata = "Test Metadata",
-    NotificationIdentifier = notificationIdentifier
+    NotificationIdentifier = notificationIdentifier,
+    ExpiryDateUTC = DateTime.UtcNow.ToString(),
+    Category = "Test Category",
+    ActionTitle = "Test Title",
+    ActionMessage = "Test Message",
+    Metadata = "Test Metadata"
 };
 
-AuthorizationRequestor authorizationRequestor = new
-
-AuthorizationRequestor(Models.ConnectionModel.CreateConnection("test", "test", true));
+AuthorizationRequestor authorizationRequestor = new AuthorizationRequestor(Models.ConnectionModel.CreateConnection("test", "test", true));
 bool authorizationCreated = await authorizationRequestor.CreateAuthorization(request);
 
 // Assert the authorization creation status and perform necessary actions
@@ -112,6 +117,54 @@ NotificationDetailsRequest detailsRequest = new NotificationDetailsRequest(notif
 NotificationDetailsResponse response = await authorizationRequestor.GetAuthorizationResponse(detailsRequest);
 
 // Retry getting the response if needed and perform necessary actions
+```
+
+## Verifying Signature<a name="verifying-signature"></a>
+To verify the signature using Bouncy Castle, you can use the following code:
+
+```csharp
+using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Security;
+
+public async Task<bool> VerifySignature(byte[] signatureData, byte[] publicKey, byte[] signature)
+{
+    ISigner signer = SignerUtilities.GetSigner("SHA256withECDSA");
+
+    ECPublicKeyParameters pubKey = (ECPublicKeyParameters)PublicKeyFactory.CreateKey(publicKey);
+    signer.Init(false, pubKey);
+    signer.BlockUpdate(signatureData, 0, signatureData
+
+.Length);
+
+    return await Task.FromResult(signer.VerifySignature(signature));
+}
+
+```
+
+To verify the signature using the standard .NET libraries, you can use the following code:
+
+```csharp
+using System.Security.Cryptography;
+
+public async Task<bool> VerifySignature(byte[] signatureData, byte[] publicKey, byte[] signature)
+{
+    using (ECDsa ecdsa = ECDsa.Create())
+    {
+        ECParameters ecParams = new ECParameters
+        {
+            Curve = ECCurve.NamedCurves.nistP256,
+            Q = new ECPoint
+            {
+                X = publicKey.Take(publicKey.Length / 2).ToArray(),
+                Y = publicKey.Skip(publicKey.Length / 2).ToArray()
+            }
+        };
+
+        ecdsa.ImportParameters(ecParams);
+
+        return await Task.FromResult(ecdsa.VerifyData(signatureData, signature, HashAlgorithmName.SHA256));
+    }
+}
 ```
 
 ## Sample Code<a name="sample-code"></a>

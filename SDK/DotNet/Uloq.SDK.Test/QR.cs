@@ -10,7 +10,15 @@ namespace Uloq.SDK.Test
         {
             var connection = Models.ConnectionModel.CreateConnection("test", "test", true);
             QRGenerator qrGenerator = new QRGenerator(connection);
-            var output = await qrGenerator.GenerateQRCode(new QRCodeRequest() { Category = "Test", ActionTitle = "Sign Test", ActionMessage = "Test Message", Metadata = "Test Metadata", PublicKey = "", RequestType = QRCodeRequest.RequestTypeEnum.Sign });
+            QRCodeResponse? output = await qrGenerator.GenerateQRCode(
+                new QRCodeRequest() { 
+                    Category = "Test", 
+                    ActionTitle = "Sign Test", 
+                    ActionMessage = "Test Message", 
+                    Metadata = "Test Metadata", 
+                    PublicKey = "", 
+                    RequestType = QRCodeRequest.RequestTypeEnum.Sign 
+                });
             Assert.True(output != null, "No output received");
 
             if (output != null)
