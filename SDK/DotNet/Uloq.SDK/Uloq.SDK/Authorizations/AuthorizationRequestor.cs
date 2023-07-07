@@ -79,5 +79,29 @@ namespace Uloq.SDK.Authorizations
 
             return null;
         }
+
+        /// <summary>
+        /// Periodically runs the GetAuthorizationResponse function and times out after a defined period.
+        /// </summary>
+        /// <param name="notificationDetailsRequest">The notification details request.</param>
+        /// <param name="interval">The interval between each request.</param>
+        /// <param name="timeout">The timeout period.</param>
+        /// <returns>The notification details response if successful within the timeout period; otherwise, null.</returns>
+        public async Task<NotificationDetailsResponse> RunAuthorizationResponseTask(NotificationDetailsRequest notificationDetailsRequest, TimeSpan interval, TimeSpan timeout)
+        {
+            DateTime endTime = DateTime.Now + timeout;
+
+            while (DateTime.Now < endTime)
+            {
+                NotificationDetailsResponse response = await GetAuthorizationResponse(notificationDetailsRequest);
+                if (response != null)
+                    return response;
+
+                await Task.Delay(interval);
+            }
+
+            return null; // Timed out
+        }
+
     }
 }

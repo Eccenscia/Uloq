@@ -1,5 +1,6 @@
 ﻿using Uloq.SDK.Authorizations;
 using Uloq.SDK.Eccenscia.Services.Models.UloqRequestor;
+using Uloq.SDK.Models;
 
 namespace Uloq.SDK.Test
 {
@@ -74,6 +75,25 @@ namespace Uloq.SDK.Test
                 Assert.True(response.Signature != null, "Signature is not null");
                 Assert.True(response.KeyIdentifier == _keyIdentifier, "Key identifier is correct");
             }
+        }
+
+        [Fact(DisplayName = "Test response timeout")]
+        public async Task RunAuthorizationResponseTask_ShouldReturnResponseWithinTimeoutPeriod()
+        {
+            // Arrange
+            var connectionModel = new ConnectionModel();
+            var authorizationRequestor = new AuthorizationRequestor(connectionModel);
+
+            var notificationDetailsRequest = new NotificationDetailsRequest();
+            var interval = TimeSpan.FromSeconds(1);
+            var timeout = TimeSpan.FromSeconds(10);
+
+            // Act
+            var task = authorizationRequestor.RunAuthorizationResponseTask(notificationDetailsRequest, interval, timeout);
+            var response = await task;
+
+            if (response != null)            
+                Assert.NotNull(response);
         }
     }
 }

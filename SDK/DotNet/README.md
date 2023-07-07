@@ -1,192 +1,171 @@
-# Integration Documentation
+Certainly! Here's the complete document for the Uloq integration:
 
-This document provides an overview and usage examples for integrating the **Uloq.SDK** into your application. The **Uloq.SDK** is a software development kit that enables seamless integration with the Uloq platform for generating QR codes and handling authorizations.
+# Uloq Integration Documentation
+
+Welcome to the Uloq integration documentation. This guide will help you understand how to integrate Uloq into your application using the Uloq SDK.
 
 ## Table of Contents
-1. [Prerequisites](#prerequisites)
-2. [Installation](#installation)
-3. [Generating Signing QR Code](#generating-signing-qr-code)
-4. [Generating Key Exchange QR Code](#generating-key-exchange-qr-code)
-5. [Creating Authorization Request](#creating-authorization-request)
-6. [Getting Authorization Response](#getting-authorization-response)
-7. [Verifying Signature](#verifying-signature)
-8. [Sample Code](#sample-code)
-9. [Contributing](#contributing)
-10. [License](#license)
+
+- [Introduction](#introduction)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Getting Started](#getting-started)
+  - [Creating an Authorization Request](#creating-authorization-request)
+  - [Creating an Authorization Request with Fields](#creating-authorization-request-with-fields)
+  - [Getting Authorization Response](#getting-authorization-response)
+  - [Testing Response Timeout](#testing-response-timeout)
+- [Sample Code](#sample-code)
+- [Contributing](#contributing)
+- [License](#license)
+
+## Introduction<a name="introduction"></a>
+
+Uloq is a powerful service that provides authorization and QR code generation capabilities for your application. With Uloq, you can easily implement secure authorization flows and generate QR codes for various purposes.
+
+This integration documentation focuses on the Uloq SDK, which provides a convenient way to interact with the Uloq service in your .NET applications. You'll learn how to create authorization requests, retrieve authorization responses, and generate QR codes using the Uloq SDK.
 
 ## Prerequisites<a name="prerequisites"></a>
-- .NET Core SDK (version X.X or higher)
-- Uloq account with API access
+
+Before you begin integrating Uloq into your application, make sure you have the following prerequisites:
+
+- .NET Core or .NET Framework installed on your development machine.
+- Uloq API key and related credentials.
+- Access to the Uloq service endpoints.
 
 ## Installation<a name="installation"></a>
-To use the **Uloq.SDK** in your project, follow these steps:
 
-1. Open your project in Visual Studio.
+To install the Uloq SDK in your application, you can use either NuGet Package Manager or the .NET CLI.
 
-2. Right-click on your project in the Solution Explorer and select "Manage NuGet Packages".
+### NuGet Package Manager
 
-3. In the NuGet Package Manager, search for "Uloq.SDK".
+1. Open the NuGet Package Manager in Visual Studio.
+2. Search for `Uloq.SDK` in the NuGet package repository.
+3. Select the `Uloq.SDK` package from the search results.
+4. Choose the desired version of the package and click the **Install** button.
 
-4. Select the **Uloq.SDK** package from the search results.
+### .NET CLI
 
-5. Click on the "Install" button to install the package into your project.
+1. Open a command prompt or terminal.
+2. Navigate to your project directory.
+3. Run the following command:
 
-6. Visual Studio will download and install the **Uloq.SDK** package and its dependencies.
-
-7. Once the installation is complete, you can start using the **Uloq.SDK** in your code.
-
-   ```csharp
-   using Uloq.SDK.Eccenscia.Services.Models.UloqRequestor;
-   using Uloq.SDK.QR;
-   using Uloq.SDK.Authorizations;
+   ```shell
+   dotnet add package Uloq.SDK
    ```
 
-## Generating Signing QR Code<a name="generating-signing-qr-code"></a>
-The following example demonstrates how to generate a signing QR code using the **Uloq.SDK**:
+## Getting Started<a name="getting-started"></a>
+
+To get started with Uloq integration, follow the steps below:
+
+1. Obtain your Uloq API key and related credentials from the Uloq service provider.
+2. Install the Uloq SDK in your .NET application using the installation instructions provided above.
+3. Create an instance of the `UloqAuthorizationClient` class using your API key and credentials.
+4. Use the methods provided by the `UloqAuthorizationClient` class to interact with the Uloq service.
+
+### Creating an Authorization Request<a name="creating-authorization-request"></a>
+
+To create an authorization request, use the `CreateAuthorizationRequest` method of the `UloqAuthorizationClient` class. This method allows you to create an authorization request with various parameters, such as action message, action title, category, expiry date, key identifier, metadata, and notification identifier.
+
+Example:
 
 ```csharp
-var connection = Models.ConnectionModel.CreateConnection("test", "test", true);
-QRGenerator qrGenerator = new QRGenerator(connection);
-QRCodeRequest qrCodeRequest = new QRCodeRequest()
-{
-    RequestType = QRCodeRequest.RequestTypeEnum.Sign,
-    Category = "Test Category",
-    ActionTitle = "Sign Test",
-    ActionMessage = "Test Message",
-    Metadata = "Test Metadata",
-    PublicKey = "ABC123"
-};
-QRCodeResponse? output = await qrGenerator.GenerateQRCode(qrCodeRequest);
+using Uloq.SDK.Authorizations;
 
-// Example output:
-// output.NotificationIdentifier = "12345"
-// output.Image = "Base64-encoded image data"
-// output.Url = "https://example.com/qr-code"
+// Create an instance of the UloqAuthorizationClient class
+UloqAuthorizationClient authorizationClient = new UloqAuthorizationClient("<your-api-key>", "<your-credentials>");
 
-```
-
-## Generating Key Exchange QR Code<a name="generating-key-exchange-qr-code"></a>
-The following example demonstrates how to generate a key exchange QR code using the **Uloq.SDK**:
-
-```csharp
-var connection = Models.ConnectionModel.CreateConnection("test", "test", true);
-QRGenerator qrGenerator = new QRGenerator(connection);
-QRCodeRequest qrCodeRequest = new QRCodeRequest()
-{
-    RequestType = QRCodeRequest.RequestTypeEnum.KeyExchange,
-    Category = "Test Category",
-    ActionTitle = "Key Exchange Test",
-    ActionMessage = "Test Message",
-    Metadata = "Test Metadata",
-    PublicKey = "DEF456"
-};
-QRCodeResponse? output = await qrGenerator.GenerateQRCode(qrCodeRequest);
-
-// Example output:
-// output.NotificationIdentifier = "67890"
-// output.Image = "Base64-encoded image data"
-// output.Url = "https://example.com/qr-code"
-
-```
-
-## Creating Authorization Request<a name="creating-authorization-request"></a>
-The following example demonstrates how to create an authorization request using the **Uloq.SDK**:
-
-```csharp
-string keyIdentifier = "ULoqKeyIdentifier";
-string notificationIdentifier = "Notification123";
-
+// Create an authorization request
 AuthorizationRequest request = new AuthorizationRequest
 {
-    KeyIdentifier = keyIdentifier,
-    NotificationIdentifier = notificationIdentifier,
-    ExpiryDateUTC = DateTime.UtcNow.ToString(),
-    Category = "Test Category",
-    ActionTitle = "Test Title",
     ActionMessage = "Test Message",
-    Metadata = "Test Metadata"
+    ActionTitle = "Test Title",
+    Category = "Test Category",
+    ExpiryDateUTC = DateTime.UtcNow.ToString(),
+    KeyIdentifier = "<insert your uloq key identifier>",
+    Metadata = "Test Metadata",
+    NotificationIdentifier = Guid.NewGuid().ToString()
 };
 
-AuthorizationRequestor authorizationRequestor = new AuthorizationRequestor(Models.ConnectionModel.CreateConnection("test", "test", true));
-bool authorizationCreated = await authorizationRequestor.CreateAuthorization(request);
-
-// Example output:
-// authorizationCreated = true
+// Send the authorization request
+bool authorizationCreated = await authorizationClient.CreateAuthorizationRequest(request);
 
 ```
 
-## Getting Authorization Response<a name="getting-authorization-response"></a>
-The following example demonstrates how to get an authorization response using the **Uloq.SDK**:
+### Creating an Authorization Request with Fields<a name="creating-authorization-request-with-fields"></a>
+
+If you prefer to create an authorization request by providing individual fields, you can use the `CreateAuthorizationRequest` method with the corresponding parameters. This approach offers flexibility in constructing the authorization request.
+
+Example:
 
 ```csharp
-string keyIdentifier = "ULoqKeyIdentifier";
-string notificationIdentifier = "Notification123";
+using Uloq.SDK.Authorizations;
 
-AuthorizationRequestor authorizationRequestor = new AuthorizationRequestor(Models.ConnectionModel.CreateConnection("test", "test", true));
-NotificationDetailsRequest detailsRequest = new NotificationDetailsRequest(notificationIdentifier);
-NotificationDetailsResponse response = await authorizationRequestor.GetAuthorizationResponse(detailsRequest);
+// Create an instance of the UloqAuthorizationClient class
+UloqAuthorizationClient authorizationClient = new UloqAuthorizationClient("<your-api-key>", "<your-credentials>");
 
-// Example output:
-// response.KeyIdentifier = "ULoqKeyIdentifier"
-// response.NotificationIdentifier = "Notification123"
-// response.Status = NotificationDetailsResponse.StatusEnum.Approved
-// response.Payload = [ { "Payload": "ABC123", "Order": 1 } ]
-// response.Signature = "Base64-encoded signature data"
-// response.PublicKey = "DEF456"
-// response.IdentifierMetadata = "XYZ789"
+// Create an authorization request with individual fields
+bool authorizationCreated = await authorizationClient.CreateAuthorizationRequest(
+    "<insert your uloq key identifier>",
+    Guid.NewGuid().ToString(),
+    DateTime.UtcNow.AddMinutes(1),
+    "Test Category",
+    "Test Title",
+    "Test Message",
+    "Test Metadata");
 
 ```
 
-## Verifying Signature<a name="verifying-signature"></a>
-To verify the signature using Bouncy Castle, you can use the following code:
+### Getting Authorization Response<a name="getting-authorization-response"></a>
+
+To retrieve an authorization response, use the `GetAuthorizationResponse` method of the `UloqAuthorizationClient` class. This method allows you to get the authorization response based on the notification identifier.
+
+Example:
 
 ```csharp
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.Security;
+using Uloq.SDK.Authorizations;
 
-public async Task<bool> VerifySignature(byte[] signatureData, byte[] publicKey, byte[] signature)
-{
-    ISigner signer = SignerUtilities.GetSigner("SHA256withECDSA");
+// Create an instance of the UloqAuthorizationClient class
+UloqAuthorizationClient authorizationClient = new UloqAuthorizationClient("<your-api-key>", "<your-credentials>");
 
-    ECPublicKeyParameters pubKey = (ECPublicKeyParameters)PublicKeyFactory.CreateKey(publicKey);
-    signer.Init(false, pubKey);
-    signer.BlockUpdate(signatureData, 0, signatureData.Length);
+// Get the authorization response for a notification identifier
+NotificationDetailsResponse response = await authorizationClient.GetAuthorizationResponse("<notification-identifier>");
 
-    return await Task.FromResult(signer.VerifySignature(signature));
-}
 ```
 
-To verify the signature using the standard .NET libraries, you can use the following code:
+### Testing Response Timeout<a name="testing-response-timeout"></a>
+
+If you want to test the response timeout when waiting for an authorization response, you can use the `RunAuthorizationResponseTask` method of the `UloqAuthorizationClient` class. This method allows you to run a task that waits for the authorization response within a specified timeout period.
+
+Example:
 
 ```csharp
-using System.Security.Cryptography;
+using Uloq.SDK.Authorizations;
 
-public async Task<bool> VerifySignature(byte[] signatureData, byte[] publicKey, byte[] signature)
-{
-    using (ECDsa ecdsa = ECDsa.Create())
-    {
-        ECParameters ecParams = new ECParameters
-        {
-            Curve = ECCurve.NamedCurves.nistP256,
-            Q = new ECPoint
-            {
-                X = publicKey.Take(publicKey.Length / 2).ToArray(),
-                Y = publicKey.Skip(publicKey.Length / 2).ToArray()
-            }
-        };
+// Create an instance of the UloqAuthorizationClient class
+UloqAuthorizationClient authorizationClient = new UloqAuthorizationClient("<your-api-key>", "<your-credentials>");
 
-        ecdsa.ImportParameters(ecParams);
+// Set up the necessary parameters
+NotificationDetailsRequest detailsRequest = new NotificationDetailsRequest();
+TimeSpan interval = TimeSpan.FromSeconds(1);
+TimeSpan timeout = TimeSpan.FromSeconds(10);
 
-        return await Task.FromResult(ecdsa.VerifyData(signatureData, signature, HashAlgorithmName.SHA256));
-    }
-}
+// Run the authorization response task
+Task<NotificationDetailsResponse> task = authorizationClient.RunAuthorizationResponseTask(detailsRequest, interval, timeout);
+
+// Wait for the task to complete
+NotificationDetailsResponse response = await task;
+
 ```
+
+In this example, the `RunAuthorizationResponseTask` method starts a task that waits for the authorization response within the given timeout period. If the response is received within the timeout, the task completes successfully.
 
 ## Sample Code<a name="sample-code"></a>
-For more sample code and usage examples, please refer to the provided test classes.
+
+For more sample code and usage examples, please refer to the provided test classes in the Uloq SDK repository.
 
 ## Contributing<a name="contributing"></a>
-Contributions to the **Uloq.SDK** are welcome! If you find any issues or have suggestions for improvement, please submit an issue or pull request on the GitHub repository.
+
+Contributions to the Uloq SDK are welcome! If you find any issues or have suggestions for improvement, please submit an issue or pull request on the [Uloq GitHub repository](https://github.com/Eccenscia/Uloq).
 
 ## License<a name="license"></a>
 The **Uloq.SDK** is released under the [MIT License](https://opensource.org/licenses/MIT).
