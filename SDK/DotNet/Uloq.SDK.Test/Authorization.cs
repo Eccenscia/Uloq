@@ -81,8 +81,7 @@ namespace Uloq.SDK.Test
         public async Task RunAuthorizationResponseTask_ShouldReturnResponseWithinTimeoutPeriod()
         {
             // Arrange
-            var connectionModel = new ConnectionModel();
-            var authorizationRequestor = new AuthorizationRequestor(connectionModel);
+            AuthorizationRequestor authorizationRequestor = new AuthorizationRequestor(Models.ConnectionModel.CreateConnection("test", "test", true));
 
             var notificationDetailsRequest = new NotificationDetailsRequest();
             var interval = TimeSpan.FromSeconds(1);

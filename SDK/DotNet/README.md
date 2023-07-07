@@ -1,171 +1,145 @@
-Certainly! Here's the complete document for the Uloq integration:
+## Integration Documentation
 
-# Uloq Integration Documentation
+This documentation provides guidance on how to integrate Uloq into your application using the Uloq .NET SDK.
 
-Welcome to the Uloq integration documentation. This guide will help you understand how to integrate Uloq into your application using the Uloq SDK.
+### Prerequisites
 
-## Table of Contents
+Before you start integrating Uloq into your application, ensure that you have the following prerequisites:
 
-- [Introduction](#introduction)
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-- [Getting Started](#getting-started)
-  - [Creating an Authorization Request](#creating-authorization-request)
-  - [Creating an Authorization Request with Fields](#creating-authorization-request-with-fields)
-  - [Getting Authorization Response](#getting-authorization-response)
-  - [Testing Response Timeout](#testing-response-timeout)
-- [Sample Code](#sample-code)
-- [Contributing](#contributing)
-- [License](#license)
+- .NET SDK installed on your development machine
+- Uloq API key and credentials
 
-## Introduction<a name="introduction"></a>
+### Installation
 
-Uloq is a powerful service that provides authorization and QR code generation capabilities for your application. With Uloq, you can easily implement secure authorization flows and generate QR codes for various purposes.
+To install the Uloq .NET SDK in your project, you can use the NuGet package manager in Visual Studio. Follow these steps:
 
-This integration documentation focuses on the Uloq SDK, which provides a convenient way to interact with the Uloq service in your .NET applications. You'll learn how to create authorization requests, retrieve authorization responses, and generate QR codes using the Uloq SDK.
+1. Open your project in Visual Studio.
+2. Right-click on your project in the Solution Explorer and select "Manage NuGet Packages".
+3. In the NuGet Package Manager, search for "Uloq.SDK".
+4. Click on the "Uloq.SDK" package in the search results.
+5. Select the desired version of the package and click "Install" to add it to your project.
 
-## Prerequisites<a name="prerequisites"></a>
+Alternatively, you can install the Uloq .NET SDK using the .NET CLI. Open a command prompt and navigate to your project directory. Run the following command:
 
-Before you begin integrating Uloq into your application, make sure you have the following prerequisites:
+```shell
+dotnet add package Uloq.SDK
+```
 
-- .NET Core or .NET Framework installed on your development machine.
-- Uloq API key and related credentials.
-- Access to the Uloq service endpoints.
+### Usage
 
-## Installation<a name="installation"></a>
+To use the Uloq SDK in your application, follow these steps:
 
-To install the Uloq SDK in your application, you can use either NuGet Package Manager or the .NET CLI.
-
-### NuGet Package Manager
-
-1. Open the NuGet Package Manager in Visual Studio.
-2. Search for `Uloq.SDK` in the NuGet package repository.
-3. Select the `Uloq.SDK` package from the search results.
-4. Choose the desired version of the package and click the **Install** button.
-
-### .NET CLI
-
-1. Open a command prompt or terminal.
-2. Navigate to your project directory.
-3. Run the following command:
-
-   ```shell
-   dotnet add package Uloq.SDK
-   ```
-
-## Getting Started<a name="getting-started"></a>
-
-To get started with Uloq integration, follow the steps below:
-
-1. Obtain your Uloq API key and related credentials from the Uloq service provider.
-2. Install the Uloq SDK in your .NET application using the installation instructions provided above.
-3. Create an instance of the `UloqAuthorizationClient` class using your API key and credentials.
-4. Use the methods provided by the `UloqAuthorizationClient` class to interact with the Uloq service.
-
-### Creating an Authorization Request<a name="creating-authorization-request"></a>
-
-To create an authorization request, use the `CreateAuthorizationRequest` method of the `UloqAuthorizationClient` class. This method allows you to create an authorization request with various parameters, such as action message, action title, category, expiry date, key identifier, metadata, and notification identifier.
-
-Example:
+1. Import the necessary namespaces in your code:
 
 ```csharp
 using Uloq.SDK.Authorizations;
+using Uloq.SDK.Eccenscia.Services.Models.UloqRequestor;
+```
 
-// Create an instance of the UloqAuthorizationClient class
-UloqAuthorizationClient authorizationClient = new UloqAuthorizationClient("<your-api-key>", "<your-credentials>");
+2. Create an instance of the `AuthorizationRequestor` class:
 
-// Create an authorization request
-AuthorizationRequest request = new AuthorizationRequest
+```csharp
+var authorizationRequestor = new AuthorizationRequestor(Models.ConnectionModel.CreateConnection("test", "test", true));
+```
+
+3. Use the methods provided by the `AuthorizationRequestor` class to perform authorization-related actions.
+
+### Creating Authorization Request
+
+The `CreateAuthorizationRequest` method allows you to create an authorization request using the Uloq.SDK. The following example demonstrates how to create an authorization request with a model:
+
+```csharp
+string keyIdentifier = "<insert your uloq key identifier>";
+string notificationIdentifier = Guid.NewGuid().ToString();
+
+var request = new AuthorizationRequest
 {
     ActionMessage = "Test Message",
     ActionTitle = "Test Title",
     Category = "Test Category",
     ExpiryDateUTC = DateTime.UtcNow.ToString(),
-    KeyIdentifier = "<insert your uloq key identifier>",
+    KeyIdentifier = keyIdentifier,
     Metadata = "Test Metadata",
-    NotificationIdentifier = Guid.NewGuid().ToString()
+    NotificationIdentifier = notificationIdentifier
 };
 
-// Send the authorization request
-bool authorizationCreated = await authorizationClient.CreateAuthorizationRequest(request);
+bool authorizationCreated = await authorizationRequestor.CreateAuthorization(request);
 
+// Assert the authorization creation status and perform necessary actions
 ```
 
-### Creating an Authorization Request with Fields<a name="creating-authorization-request-with-fields"></a>
-
-If you prefer to create an authorization request by providing individual fields, you can use the `CreateAuthorizationRequest` method with the corresponding parameters. This approach offers flexibility in constructing the authorization request.
-
-Example:
+The `CreateAuthorizationRequestWithFields` method demonstrates how to create an authorization request with individual fields:
 
 ```csharp
-using Uloq.SDK.Authorizations;
+string keyIdentifier = "<insert your uloq key identifier>";
+string notificationIdentifier = Guid.NewGuid().ToString();
 
-// Create an instance of the UloqAuthorizationClient class
-UloqAuthorizationClient authorizationClient = new UloqAuthorizationClient("<your-api-key>", "<your-credentials>");
+var request = new AuthorizationRequest
+{
+    ActionMessage = "Test Message",
+    ActionTitle = "Test Title",
+    Category = "Test Category",
+    ExpiryDateUTC = DateTime.UtcNow.ToString(),
+    KeyIdentifier = keyIdentifier,
+    Metadata = "Test Metadata",
+    NotificationIdentifier = notificationIdentifier
+};
 
-// Create an authorization request with individual fields
-bool authorizationCreated = await authorizationClient.CreateAuthorizationRequest(
-    "<insert your uloq key identifier>",
-    Guid.NewGuid().ToString(),
+bool authorizationCreated = await authorizationRequestor.CreateAuthorization(
+    request.KeyIdentifier,
+    request.NotificationIdentifier,
     DateTime.UtcNow.AddMinutes(1),
-    "Test Category",
-    "Test Title",
-    "Test Message",
-    "Test Metadata");
+    request.Category,
+    request.ActionTitle,
+    request.ActionMessage,
+    request.Metadata);
 
+// Assert the authorization creation status and perform necessary actions
 ```
 
-### Getting Authorization Response<a name="getting-authorization-response"></a>
+### Getting Authorization Response
 
-To retrieve an authorization response, use the `GetAuthorizationResponse` method of the `UloqAuthorizationClient` class. This method allows you to get the authorization response based on the notification identifier.
-
-Example:
+The `GetRequestResponse` method allows you to retrieve an authorization response using the Uloq.SDK. It waits for a response for a specified timeout period. The following example demonstrates how to get an authorization response:
 
 ```csharp
-using Uloq.SDK.Authorizations;
+var response = await authorizationRequestor.GetAuthorizationResponse(new NotificationDetailsRequest(notificationIdentifier));
 
-// Create an instance of the UloqAuthorizationClient class
-UloqAuthorizationClient authorizationClient = new UloqAuthorizationClient("<your-api-key>", "<your-credentials>");
+int counter = 0;
+while (response == null && counter < 30)
+{
+    Thread.Sleep(1000);
+    counter++;
+    response = await authorizationRequestor.GetAuthorizationResponse(new NotificationDetailsRequest(notificationIdentifier));
+}
 
-// Get the authorization response for a notification identifier
-NotificationDetailsResponse response = await authorizationClient.GetAuthorizationResponse("<notification-identifier>");
-
+if (response != null)
+{
+    Assert.True(response.Status == NotificationDetailsResponse.StatusEnum.Approved || response.Status == NotificationDetailsResponse.StatusEnum.Declined, "Status is pending");
+    Assert.True(response.Signature != null, "Signature is not null");
+    Assert.True(response.KeyIdentifier == keyIdentifier, "Key identifier is correct");
+}
 ```
 
-### Testing Response Timeout<a name="testing-response-timeout"></a>
-
-If you want to test the response timeout when waiting for an authorization response, you can use the `RunAuthorizationResponseTask` method of the `UloqAuthorizationClient` class. This method allows you to run a task that waits for the authorization response within a specified timeout period.
-
-Example:
+The `RunAuthorizationResponseTask_ShouldReturnResponseWithinTimeoutPeriod` method demonstrates how to run the authorization response task with a specified timeout period:
 
 ```csharp
-using Uloq.SDK.Authorizations;
+// Arrange
+var notificationDetailsRequest = new NotificationDetailsRequest();
+var interval = TimeSpan.FromSeconds(1);
+var timeout = TimeSpan.FromSeconds(10);
 
-// Create an instance of the UloqAuthorizationClient class
-UloqAuthorizationClient authorizationClient = new UloqAuthorizationClient("<your-api-key>", "<your-credentials>");
+// Act
+var task = authorizationRequestor.RunAuthorizationResponseTask(notificationDetailsRequest, interval, timeout);
+var response = await task;
 
-// Set up the necessary parameters
-NotificationDetailsRequest detailsRequest = new NotificationDetailsRequest();
-TimeSpan interval = TimeSpan.FromSeconds(1);
-TimeSpan timeout = TimeSpan.FromSeconds(10);
-
-// Run the authorization response task
-Task<NotificationDetailsResponse> task = authorizationClient.RunAuthorizationResponseTask(detailsRequest, interval, timeout);
-
-// Wait for the task to complete
-NotificationDetailsResponse response = await task;
-
+if (response != null)
+    Assert.NotNull(response);
 ```
 
-In this example, the `RunAuthorizationResponseTask` method starts a task that waits for the authorization response within the given timeout period. If the response is received within the timeout, the task completes successfully.
-
-## Sample Code<a name="sample-code"></a>
-
-For more sample code and usage examples, please refer to the provided test classes in the Uloq SDK repository.
+Please note that the `Thread.Sleep` method in the `GetRequestResponse` method is used for demonstration purposes and should be replaced with a more suitable approach in a production environment.
 
 ## Contributing<a name="contributing"></a>
-
-Contributions to the Uloq SDK are welcome! If you find any issues or have suggestions for improvement, please submit an issue or pull request on the [Uloq GitHub repository](https://github.com/Eccenscia/Uloq).
+Contributions to the Uloq project are welcome! If you find any issues or have suggestions for improvement, please submit an issue or pull request on the GitHub repository.
 
 ## License<a name="license"></a>
-The **Uloq.SDK** is released under the [MIT License](https://opensource.org/licenses/MIT).
+Uloq is licensed under the MIT License. See the [LICENSE](./LICENSE) file for more details.
