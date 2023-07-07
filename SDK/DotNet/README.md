@@ -1,15 +1,34 @@
-## Integration Documentation
+Certainly! Here's the updated documentation including only the integration document with a table of contents:
+
+# Uloq
+
+Welcome to the Uloq repository!
+
+- [Integration Documentation](#integration-documentation) - Learn how to integrate Uloq into your application using the .NET SDK.
+
+## Table of Contents
+
+- [Integration Documentation](#integration-documentation)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+  - [Usage](#usage)
+  - [Creating Authorization Request](#creating-authorization-request)
+  - [Getting Authorization Response](#getting-authorization-response)
+- [Contributing](#contributing)
+- [License](#license)
+
+## Integration Documentation<a name="integration-documentation"></a>
 
 This documentation provides guidance on how to integrate Uloq into your application using the Uloq .NET SDK.
 
-### Prerequisites
+### Prerequisites<a name="prerequisites"></a>
 
 Before you start integrating Uloq into your application, ensure that you have the following prerequisites:
 
 - .NET SDK installed on your development machine
 - Uloq API key and credentials
 
-### Installation
+### Installation<a name="installation"></a>
 
 To install the Uloq .NET SDK in your project, you can use the NuGet package manager in Visual Studio. Follow these steps:
 
@@ -25,7 +44,7 @@ Alternatively, you can install the Uloq .NET SDK using the .NET CLI. Open a comm
 dotnet add package Uloq.SDK
 ```
 
-### Usage
+### Usage<a name="usage"></a>
 
 To use the Uloq SDK in your application, follow these steps:
 
@@ -44,7 +63,7 @@ var authorizationRequestor = new AuthorizationRequestor(Models.ConnectionModel.C
 
 3. Use the methods provided by the `AuthorizationRequestor` class to perform authorization-related actions.
 
-### Creating Authorization Request
+### Creating Authorization Request<a name="creating-authorization-request"></a>
 
 The `CreateAuthorizationRequest` method allows you to create an authorization request using the Uloq.SDK. The following example demonstrates how to create an authorization request with a model:
 
@@ -97,7 +116,7 @@ bool authorizationCreated = await authorizationRequestor.CreateAuthorization(
 // Assert the authorization creation status and perform necessary actions
 ```
 
-### Getting Authorization Response
+### Getting Authorization Response<a name="getting-authorization-response"></a>
 
 The `GetRequestResponse` method allows you to retrieve an authorization response using the Uloq.SDK. It waits for a response for a specified timeout period. The following example demonstrates how to get an authorization response:
 
@@ -139,7 +158,9 @@ if (response != null)
 Please note that the `Thread.Sleep` method in the `GetRequestResponse` method is used for demonstration purposes and should be replaced with a more suitable approach in a production environment.
 
 ## Contributing<a name="contributing"></a>
+
 Contributions to the Uloq project are welcome! If you find any issues or have suggestions for improvement, please submit an issue or pull request on the GitHub repository.
 
 ## License<a name="license"></a>
+
 Uloq is licensed under the MIT License. See the [LICENSE](./LICENSE) file for more details.
