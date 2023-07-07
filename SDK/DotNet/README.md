@@ -1,5 +1,3 @@
-Certainly! Here's the updated documentation including only the integration document with a table of contents:
-
 # Uloq
 
 Welcome to the Uloq repository!
