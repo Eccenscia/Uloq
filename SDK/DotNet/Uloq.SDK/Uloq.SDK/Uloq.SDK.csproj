@@ -3,6 +3,25 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Title>Uloq Core SDK</Title>
+    <PackAsTool>False</PackAsTool>
+    <Authors>Andrew Jensen</Authors>
+    <Company>Eccenscia LLC</Company>
+    <Description>Uloq Core SDK</Description>
+    <Copyright>Eccenscia LLC</Copyright>
+    <PackageProjectUrl>https://uloq.io</PackageProjectUrl>
+    <PackageIcon>uloq216.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/Eccenscia/Uloq</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageReleaseNotes>Uloq Core SDK</PackageReleaseNotes>
+    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+    <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
+    <AssemblyVersion>1.0.2</AssemblyVersion>
+    <FileVersion>1.0.2</FileVersion>
+    <Version>1.0.2</Version>
+    <IncludeSymbols>True</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,5 +31,22 @@
   <ItemGroup>
     <Folder Include="Providers\" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\..\..\LICENSE.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\..\..\..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="C:\Users\andre\OneDrive\Pictures\uloq216.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+
 
 </Project>
