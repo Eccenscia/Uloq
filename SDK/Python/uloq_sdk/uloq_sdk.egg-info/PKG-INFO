@@ -1,0 +1,10 @@
+Metadata-Version: 2.1
+Name: uloq-sdk
+Version: 1
+Summary: Uloq SDK
+Home-page: https://uloq.io
+Author: Eccenscia
+Author-email: technical@eccenscia.com
+License: MIT
+Keywords: authentication and authorization uloq
+License-File: LICENSE.md

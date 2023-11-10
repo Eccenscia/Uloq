@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{a23b8add-2bdc-4be0-a36b-d34596052b7f}</ProjectGuid>
+    <ProjectHome />
+    <StartupFile>my_module\__init__.py</StartupFile>
+    <SearchPath />
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <ProjectTypeGuids>{888888a0-9f3d-457c-b088-3a5042f75d52}</ProjectTypeGuids>
+    <LaunchProvider>Standard Python launcher</LaunchProvider>
+    <InterpreterId />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
+  <PropertyGroup>
+    <VisualStudioVersion Condition=" '$(VisualStudioVersion)' == '' ">10.0</VisualStudioVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="my_module\AuthorizationRequestor.py" />
+    <Compile Include="my_module\ByteArrayExtensions.py" />
+    <Compile Include="my_module\connectors\HttpConnector.py" />
+    <Compile Include="my_module\Eccenscia\Services\Models\configuration\Configuration.py" />
+    <Compile Include="my_module\Eccenscia\Services\Models\UloqRequestor\application_activation_request.py" />
+    <Compile Include="my_module\Eccenscia\Services\Models\UloqRequestor\application_activation_response.py" />
+    <Compile Include="my_module\Eccenscia\Services\Models\UloqRequestor\authorization_request.py" />
+    <Compile Include="my_module\Eccenscia\Services\Models\UloqRequestor\notification_details_request.py" />
+    <Compile Include="my_module\Eccenscia\Services\Models\UloqRequestor\notification_details_response.py" />
+    <Compile Include="my_module\Eccenscia\Services\Models\UloqRequestor\outcomes_object.py" />
+    <Compile Include="my_module\Eccenscia\Services\Models\UloqRequestor\payload_object.py" />
+    <Compile Include="my_module\Eccenscia\Services\Models\UloqRequestor\qr_code_request.py" />
+    <Compile Include="my_module\Eccenscia\Services\Models\UloqRequestor\qr_code_response.py" />
+    <Compile Include="my_module\Eccenscia\Services\Models\UloqRequestor\registration_request.py" />
+    <Compile Include="my_module\Eccenscia\Services\Models\UloqRequestor\registration_response.py" />
+    <Compile Include="my_module\models\ConnectionModel.py" />
+    <Compile Include="my_module\models\OutcomeObject.py" />
+    <Compile Include="my_module\QRGenerator.py" />
+    <Compile Include="my_module\StringExtensions.py" />
+    <Compile Include="my_module\__init__.py" />
+    <Compile Include="setup.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="uloq_sdk.egg-info\dependency_links.txt" />
+    <Content Include="uloq_sdk.egg-info\requires.txt" />
+    <Content Include="uloq_sdk.egg-info\SOURCES.txt" />
+    <Content Include="uloq_sdk.egg-info\top_level.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="my_module" />
+    <Folder Include="my_module\connectors" />
+    <Folder Include="my_module\Eccenscia\" />
+    <Folder Include="my_module\Eccenscia\Services\" />
+    <Folder Include="my_module\Eccenscia\Services\Models\" />
+    <Folder Include="my_module\Eccenscia\Services\Models\configuration" />
+    <Folder Include="my_module\Eccenscia\Services\Models\UloqRequestor" />
+    <Folder Include="my_module\models" />
+    <Folder Include="uloq_sdk.egg-info" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
+</Project>
